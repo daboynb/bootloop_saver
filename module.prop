@@ -1,0 +1,6 @@
+id=bootloop_saver
+name=Bootloop Saver
+version=v1
+versionCode=100
+author=daboynb
+description=Protect your system from bootloop
