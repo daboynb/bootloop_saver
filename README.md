@@ -4,6 +4,6 @@ If you wanna help me
 
 # Protect your system from bootloop
 
-This module detects if SystemUI is crashing or has never started and disables all modules.
+This script module detects whether the boot process has been completed and if SystemUI is crashing or has never started. If one of those conditions is met, it disables all modules.
 
 This module supports magisk, kernelsu and apatch.
