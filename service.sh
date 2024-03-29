@@ -12,16 +12,6 @@ elif [ -f "/data/adb/ap/bin/busybox" ]; then
     busybox_path="/data/adb/ap/bin/busybox"
 fi
 
-# Function that checks if boot completed
-boot_check(){
-    if [ "$(getprop sys.boot_completed)" = "1" ]; then
-        echo "Boot process completed"
-    else
-        echo "Boot process not completed."
-        disable_modules
-    fi
-}
-
 # Function that disables all the modules
 disable_modules(){
     list="$("$busybox_path" find /data/adb/modules/* -prune -type d)"
@@ -55,7 +45,12 @@ fi
 sleep 10
 
 # Check if boot completed
-boot_check
+if [ "$(getprop sys.boot_completed)" = "1" ]; then
+    echo "Boot process completed"
+else
+    echo "Boot process not completed."
+    disable_modules
+fi
 ####################################
 
 #################################### Third check
