@@ -1,5 +1,6 @@
 #!/system/bin/sh
 
+#################################### functions
 # Detect busybox
 busybox_path=""
 
@@ -30,15 +31,34 @@ disable_modules(){
     reboot
     exit
 }
+####################################
 
-# Sleep for 75 seconds
-sleep 75
+#################################### First check
+# Check zygote process ID at three intervals
+sleep 20
+zygote_PID1=$("$busybox_path" pgrep -f "zygote" | "$busybox_path" awk 'NR==1{print $1}')
+sleep 15
+zygote_PID2=$("$busybox_path" pgrep -f "zygote" | "$busybox_path" awk 'NR==1{print $1}')
+sleep 15
+zygote_PID3=$("$busybox_path" pgrep -f "zygote" | "$busybox_path" awk 'NR==1{print $1}')
+
+# Compare the results  
+if [ -n "$zygote_PID1" ] && [ -n "$zygote_PID2" ] && [ -n "$zygote_PID3" ]; then
+    if [ "$zygote_PID1" != "$zygote_PID2" ] || [ "$zygote_PID2" != "$zygote_PID3" ]; then
+        disable_modules
+    fi
+fi
+####################################
+
+#################################### Second check
+# Sleep for 10 seconds
+sleep 10
 
 # Check if boot completed
 boot_check
+####################################
 
-### Additional checks ###
-
+#################################### Third check
 # Check SystemUI process ID at three intervals
 sleep 20
 SYSTEMUI_PID1=$("$busybox_path" pgrep -f "systemui" | "$busybox_path" awk 'NR==1{print $1}')
@@ -53,3 +73,4 @@ if [ -n "$SYSTEMUI_PID1" ] && [ -n "$SYSTEMUI_PID2" ] && [ -n "$SYSTEMUI_PID3" ]
         disable_modules
     fi
 fi
+#################################### End
